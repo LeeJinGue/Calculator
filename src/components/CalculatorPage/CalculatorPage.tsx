@@ -1,17 +1,16 @@
 import { Box, Center, Grid, GridItem } from "@chakra-ui/react";
 import CalButton from "../common/CalButton";
 import { CALARRAY } from "../../constants/array";
-import { MouseEventHandler, useState } from "react";
+import { MouseEventHandler,MouseEvent, useState } from "react";
 const CalculatorPage:React.FC = () => {
   const [answer, setAnswer] = useState("")
-  const handleCalButtonClick = (e: MouseEventHandler<HTMLButtonElement>) => {
-    console.log("e",e)
-    switch(e.target.textContent){
+  const handleCalButtonClick = (val:string) => {
+    switch(val){
       case "AC":
         setAnswer("")
         break
       default:
-        setAnswer(prev => prev + e.target.textContent)
+        setAnswer(prev => prev + val)
         break
     }
   }
@@ -29,7 +28,7 @@ const CalculatorPage:React.FC = () => {
           </Box>
         </GridItem>
         {CALARRAY.map((val:string) => 
-        <GridItem w="100%" h="10">
+        <GridItem w="100%" h="10" key={val}>
           <Center>
             <CalButton content={val} 
             handleCalButtonClick={handleCalButtonClick} 
