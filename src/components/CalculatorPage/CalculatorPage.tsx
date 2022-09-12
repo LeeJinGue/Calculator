@@ -1,54 +1,58 @@
 import { Box, Center, Grid, GridItem } from "@chakra-ui/react";
 import CalButton from "../common/CalButton";
 import { CALARRAY } from "../../constants/array";
-import { MouseEventHandler,MouseEvent, useState } from "react";
-const getAnswer = (expression:string) => {
-  const nums = expression.split(/\D/)
-  const operators = expression.split(/[\d]+/)
-  // 1. 숫자를 모아둔 nums배열
-  // 2. 연산자를 모아둔 operators배열
-  operators.pop()
-  operators.shift()
-  // 연산자 split하면 앞,뒤에 공백 붙어서 하나씩 제거
-  let result:number = 0
-  nums.forEach((val, index) => {
-    if(index === 0) result = Number.parseInt(nums[0])
-    else{
-      switch(operators[index-1]){
-        case "+":
-          // console.log(`덧셈: ${result} + ${nums[index]}`)
-          result += Number.parseInt(nums[index])
-          break;
-        case "-":
-          // console.log(`뺄셈: ${result} - ${nums[index]}`)
-          result -= Number.parseInt(nums[index])
-          break;
-        case "*":
-          // console.log(`곱셈: ${result} * ${nums[index]}`)
-          result *= Number.parseInt(nums[index])
-          break;
-        case "/":
-          // console.log(`나눗셈: ${result} / ${nums[index]}`)
-          result /= Number.parseInt(nums[index])
-          break;
-        case "%":
-          // console.log(`나눗셈 나머지: ${result} % ${nums[index]}`)
-          result %= Number.parseInt(nums[index])
-          break;
-        case "^":
-          // console.log(`제곱: ${result} ^ ${nums[index]}`)
-          result **= Number.parseInt(nums[index])
-          break;
-        case ".":
-          const right=Number.parseInt(nums[index])/10**(nums[index].length)
-          console.log(`소숫점: ${result}+${right}`)
-          result += right;
-          break;
-      }
-    }
-  })
-  return result.toString();
+import {useState } from "react";
+
+// 숫자1, 숫자2, 연산자 받아서 연산결과 리턴해주는 함수
+const calculate = (left:string, right:string, expr:string) => {
+  const leftNum:number = Number.parseInt(left)
+  const rightNum:number = Number.parseInt(right)
+  switch(expr){
+    case "+": return leftNum+rightNum
+    case "-": return leftNum-rightNum
+    case "/": return leftNum/rightNum
+    case "%": return leftNum%rightNum
+    case "*": return leftNum*rightNum
+    case "^": return leftNum**rightNum
+    // case ".": return leftNum+rightNum
+    default: return leftNum+rightNum
+  }
 }
+
+// 숫자와 연산자를 배열에 다 때려박는다.
+// 곱/나눗셈/제곱 연산자의 인덱스를 구한다.
+// 왼쪽 연산자 오른쪽을 계산해서 계산한다.
+// 덧셈/뺄셈 연산자의 인덱스도 구하고 계산한다.
+const getAnswer = (expression:String) => {
+  let nums = ""
+  let numAndOp:Array<string> = []
+  for(const str of Array.from(expression)){
+    if(str.match(/\d/)) {
+      nums+=str
+      continue
+    }
+    numAndOp.push(nums)
+    numAndOp.push(str)
+    nums = ""
+  }
+  numAndOp.push(expression[expression.length-1])
+
+  let index = numAndOp.findIndex((value:string)=> value.search(/[\^%/*]/) !== -1)
+  while(index!=-1){
+    numAndOp[index-1] = calculate(numAndOp[index-1], numAndOp[index+1],numAndOp[index]).toString()
+    numAndOp.splice(index, 2)
+    index = numAndOp.findIndex((value:string)=> value.search(/[\^%/*]/) !== -1)
+  }
+  index = numAndOp.findIndex((value:string)=> value.search(/[+-]/) !== -1)
+  while(index!=-1){
+    numAndOp[index-1] = calculate(numAndOp[index-1], numAndOp[index+1],numAndOp[index]).toString()
+    numAndOp.splice(index, 2)
+    index = numAndOp.findIndex((value:string)=> value.search(/[+-]/) !== -1)
+  }
+  if(numAndOp.length === 0) return "Error"
+  return numAndOp.pop()!.toString()
+}
+
 const CalculatorPage:React.FC = () => {
   const [answer, setAnswer] = useState("")
   const handleCalButtonClick = (val:string) => {
