@@ -9,18 +9,17 @@ import Link from "next/link";
 interface PostPageProp{
   content:string,
 }
-// {
-//   "userId": 1,
-//   "id": 1,
-//   "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-//   "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-//   },
+
 const PostPage = (props:PostPageProp) => {
   const [postList, setPostList] = useState(POSTARRAY)
   const [title, setTitle] = useState("")
   const [content, setContent] = useState("")
   const router = useRouter()
-  const addNewPost = () => setPostList(prev => prev.concat([{userId: 1, id:prev.length+1,title,body:content}]))
+  const addNewPost = () => {
+    setTitle("")
+    setContent("")
+    setPostList(prev => prev.concat([{userId: 1, id:prev.length+1,title,body:content}]))
+  }
 
   return (
       <Box p="20px" border="5px solid teal" >
