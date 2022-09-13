@@ -2,9 +2,12 @@ import { useRouter } from 'next/router'
 
 const Post = () => {
   const router = useRouter()
-  const { id } = router.query
-  console.log(router)
-  return <p>Post id: {id}</p>
+  const { title } = router.query
+  return (
+  <>
+  <p>Post title: {title}</p>
+  </>
+  )
 }
 
 export default Post
