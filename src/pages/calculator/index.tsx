@@ -5,7 +5,7 @@ import Header from '../../components/header';
 
 const Calculator:React.FC = () => {
   return (
-    <HomeLayout header={<Header />} title="계산기 페이지 입니다." content={<CalculatorPage />} />
+    <HomeLayout header={<Header imgsrc='/images/calculator-img.png' />} title="계산기 페이지 입니다." content={<CalculatorPage />} />
   )
 }
 export default Calculator;
