@@ -8,12 +8,16 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-const Header = () => {
+interface HeaderProps{
+  imgsrc:string,
+}
+
+const Header = (props:HeaderProps) => {
   return (
     <Center justifyContent="start"
     flexDirection="column"
     mt="20px" mb="20px">
-        <img src="/images/calculator-img.png" width="100px"></img>
+        <img src={props.imgsrc} width="100px"></img>
     </Center>
   )
 }
